@@ -1,15 +1,14 @@
 import Taro from '@tarojs/taro';
-import { Pet, PetProfile } from '../types/pet';
-import { Question } from '../types/question';
 
 const STORAGE_KEYS = {
   PET_PROFILES: 'pet_profiles',
-  COLLECTIONS: 'collections',
+  COLLECTIONS_ARTICLES: 'collections_articles',
+  COLLECTIONS_PITFALLS: 'collections_pitfalls',
   QUESTION_HISTORY: 'question_history'
 };
 
 export const StorageService = {
-  getPetProfiles(): PetProfile[] {
+  getPetProfiles() {
     try {
       const data = Taro.getStorageSync(STORAGE_KEYS.PET_PROFILES);
       return data ? JSON.parse(data) : [];
@@ -19,7 +18,7 @@ export const StorageService = {
     }
   },
 
-  savePetProfiles(profiles: PetProfile[]) {
+  savePetProfiles(profiles) {
     try {
       Taro.setStorageSync(STORAGE_KEYS.PET_PROFILES, JSON.stringify(profiles));
     } catch (error) {
@@ -27,14 +26,14 @@ export const StorageService = {
     }
   },
 
-  addPetProfile(profile: PetProfile) {
+  addPetProfile(profile) {
     const profiles = this.getPetProfiles();
     profiles.push(profile);
     this.savePetProfiles(profiles);
     return profiles;
   },
 
-  updatePetProfile(profileId: string, updatedProfile: PetProfile) {
+  updatePetProfile(profileId, updatedProfile) {
     const profiles = this.getPetProfiles();
     const index = profiles.findIndex(p => p.id === profileId);
     if (index !== -1) {
@@ -44,52 +43,97 @@ export const StorageService = {
     return profiles;
   },
 
-  deletePetProfile(profileId: string) {
+  deletePetProfile(profileId) {
     const profiles = this.getPetProfiles();
     const filtered = profiles.filter(p => p.id !== profileId);
     this.savePetProfiles(filtered);
     return filtered;
   },
 
-  getCollections(): string[] {
+  getCollectionsArticles() {
     try {
-      const data = Taro.getStorageSync(STORAGE_KEYS.COLLECTIONS);
+      const data = Taro.getStorageSync(STORAGE_KEYS.COLLECTIONS_ARTICLES);
       return data ? JSON.parse(data) : [];
     } catch (error) {
-      console.error('[Storage] Failed to get collections:', error);
+      console.error('[Storage] Failed to get collections articles:', error);
       return [];
     }
   },
 
-  saveCollections(collectionIds: string[]) {
+  getCollectionsPitfalls() {
     try {
-      Taro.setStorageSync(STORAGE_KEYS.COLLECTIONS, JSON.stringify(collectionIds));
+      const data = Taro.getStorageSync(STORAGE_KEYS.COLLECTIONS_PITFALLS);
+      return data ? JSON.parse(data) : [];
     } catch (error) {
-      console.error('[Storage] Failed to save collections:', error);
+      console.error('[Storage] Failed to get collections pitfalls:', error);
+      return [];
     }
   },
 
-  addCollection(id: string) {
-    const collections = this.getCollections();
+  getAllCollections() {
+    return {
+      articles: this.getCollectionsArticles(),
+      pitfalls: this.getCollectionsPitfalls()
+    };
+  },
+
+  saveCollectionsArticles(ids) {
+    try {
+      Taro.setStorageSync(STORAGE_KEYS.COLLECTIONS_ARTICLES, JSON.stringify(ids));
+    } catch (error) {
+      console.error('[Storage] Failed to save collections articles:', error);
+    }
+  },
+
+  saveCollectionsPitfalls(ids) {
+    try {
+      Taro.setStorageSync(STORAGE_KEYS.COLLECTIONS_PITFALLS, JSON.stringify(ids));
+    } catch (error) {
+      console.error('[Storage] Failed to save collections pitfalls:', error);
+    }
+  },
+
+  addArticleCollection(id) {
+    const collections = this.getCollectionsArticles();
     if (!collections.includes(id)) {
       collections.push(id);
-      this.saveCollections(collections);
+      this.saveCollectionsArticles(collections);
     }
     return collections;
   },
 
-  removeCollection(id: string) {
-    const collections = this.getCollections();
+  removeArticleCollection(id) {
+    const collections = this.getCollectionsArticles();
     const filtered = collections.filter(c => c !== id);
-    this.saveCollections(filtered);
+    this.saveCollectionsArticles(filtered);
     return filtered;
   },
 
-  isCollected(id: string): boolean {
-    return this.getCollections().includes(id);
+  isArticleCollected(id) {
+    return this.getCollectionsArticles().includes(id);
   },
 
-  getQuestionHistory(): Question[] {
+  addPitfallCollection(id) {
+    const collections = this.getCollectionsPitfalls();
+    if (!collections.includes(id)) {
+      collections.push(id);
+      this.saveCollectionsPitfalls(collections);
+    }
+    return collections;
+  },
+
+  removePitfallCollection(id) {
+    const collections = this.getCollectionsPitfalls();
+    const filtered = collections.filter(c => c !== id);
+    this.saveCollectionsPitfalls(filtered);
+    return filtered;
+  },
+
+  isPitfallCollected(id) {
+    return this.getCollectionsPitfalls().includes(id);
+  },
+
+  getQuestionHistory() {
     try {
       const data = Taro.getStorageSync(STORAGE_KEYS.QUESTION_HISTORY);
       return data ? JSON.parse(data) : [];
@@ -99,7 +143,7 @@ export const StorageService = {
     }
   },
 
-  saveQuestionHistory(questions: Question[]) {
+  saveQuestionHistory(questions) {
     try {
       Taro.setStorageSync(STORAGE_KEYS.QUESTION_HISTORY, JSON.stringify(questions));
     } catch (error) {
@@ -107,14 +151,14 @@ export const StorageService = {
     }
   },
 
-  addQuestion(question: Question) {
+  addQuestion(question) {
     const history = this.getQuestionHistory();
     history.unshift(question);
     this.saveQuestionHistory(history);
     return history;
   },
 
-  updateQuestion(questionId: string, updatedQuestion: Question) {
+  updateQuestion(questionId, updatedQuestion) {
     const history = this.getQuestionHistory();
     const index = history.findIndex(q => q.id === questionId);
     if (index !== -1) {

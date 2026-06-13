@@ -9,10 +9,12 @@ const KnowledgePage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchKeyword, setSearchKeyword] = useState('');
   const [filteredArticles, setFilteredArticles] = useState(mockArticles);
-  const [filteredPitfalls, setFilteredPitfalls] = useState(mockPitfalls);
-  const [filteredGlossary, setFilteredGlossary] = useState(mockGlossary);
-  const [searchResult, setSearchResult] = useState<'articles' | 'pitfalls' | 'glossary' | null>(null);
-  const { isCollected, addCollection, removeCollection } = useAppContext();
+  const [filteredPitfalls, setFilteredPitfalls] = useState([]);
+  const [filteredGlossary, setFilteredGlossary] = useState([]);
+  const { 
+    isArticleCollected, addArticleCollection, removeArticleCollection,
+    isPitfallCollected, addPitfallCollection, removePitfallCollection
+  } = useAppContext();
 
   useEffect(() => {
     filterContent();
@@ -25,14 +27,12 @@ const KnowledgePage: React.FC = () => {
       if (selectedCategory === 'all') {
         setFilteredArticles(mockArticles);
         setFilteredPitfalls(mockPitfalls);
-        setFilteredGlossary(mockGlossary);
-        setSearchResult(null);
+        setFilteredGlossary(mockGlossary.slice(0, 3));
       } else {
         const filtered = mockArticles.filter(article => article.category === selectedCategory);
         setFilteredArticles(filtered);
         setFilteredPitfalls([]);
         setFilteredGlossary([]);
-        setSearchResult(null);
       }
       return;
     }
@@ -56,16 +56,6 @@ const KnowledgePage: React.FC = () => {
     setFilteredArticles(articles);
     setFilteredPitfalls(pitfalls);
     setFilteredGlossary(glossary);
-
-    if (articles.length > 0) {
-      setSearchResult('articles');
-    } else if (pitfalls.length > 0) {
-      setSearchResult('pitfalls');
-    } else if (glossary.length > 0) {
-      setSearchResult('glossary');
-    } else {
-      setSearchResult(null);
-    }
   };
 
   const handleCategoryClick = (type: string) => {
@@ -91,12 +81,21 @@ const KnowledgePage: React.FC = () => {
     });
   };
 
-  const handleToggleCollect = (articleId: string, e: any) => {
+  const handleToggleArticleCollect = (articleId: string, e: any) => {
     e.stopPropagation();
-    if (isCollected(articleId)) {
-      removeCollection(articleId);
+    if (isArticleCollected(articleId)) {
+      removeArticleCollection(articleId);
     } else {
-      addCollection(articleId);
+      addArticleCollection(articleId);
+    }
+  };
+
+  const handleTogglePitfallCollect = (pitfallId: string, e: any) => {
+    e.stopPropagation();
+    if (isPitfallCollected(pitfallId)) {
+      removePitfallCollection(pitfallId);
+    } else {
+      addPitfallCollection(pitfallId);
     }
   };
 
@@ -115,8 +114,8 @@ const KnowledgePage: React.FC = () => {
     health: '💊'
   };
 
-  const showEmptyState = searchKeyword && !searchResult;
-  const showNoResults = searchKeyword && filteredArticles.length === 0 && filteredPitfalls.length === 0 && filteredGlossary.length === 0;
+  const hasSearchResults = filteredArticles.length > 0 || filteredPitfalls.length > 0 || filteredGlossary.length > 0;
+  const showEmptyState = searchKeyword && !hasSearchResults;
 
   return (
     <View className={styles.container}>
@@ -164,23 +163,7 @@ const KnowledgePage: React.FC = () => {
             ))}
           </View>
 
-          {searchKeyword && searchResult === 'pitfalls' && filteredPitfalls.length > 0 && (
-            <View className={styles.searchResults}>
-              <Text className={styles.searchResultsTitle}>
-                找到 {filteredPitfalls.length} 条避坑建议
-              </Text>
-            </View>
-          )}
-
-          {searchKeyword && searchResult === 'glossary' && filteredGlossary.length > 0 && (
-            <View className={styles.searchResults}>
-              <Text className={styles.searchResultsTitle}>
-                找到 {filteredGlossary.length} 个相关术语
-              </Text>
-            </View>
-          )}
-
-          {filteredPitfalls.length > 0 && !searchKeyword && (
+          {!searchKeyword && (
             <View className={styles.quickActions}>
               <View className={styles.quickActionCard} onClick={handlePitfallClick}>
                 <View className={styles.actionIcon} style={{ background: 'rgba(255, 149, 0, 0.1)' }}>
@@ -203,13 +186,55 @@ const KnowledgePage: React.FC = () => {
             </View>
           )}
 
-          {filteredGlossary.length > 0 && !searchKeyword && (
-            <View className={styles.glossaryPreview}>
-              <Text className={styles.sectionTitle}>热门术语</Text>
-              {filteredGlossary.slice(0, 3).map(term => (
-                <View key={term.id} className={styles.glossaryItem} onClick={handleGlossaryClick}>
+          {filteredPitfalls.length > 0 && (
+            <View className={styles.searchSection}>
+              <Text className={styles.sectionTitle}>
+                ⚠️ 匹配的避坑建议
+                <Text className={styles.count}>（{filteredPitfalls.length}条）</Text>
+              </Text>
+              {filteredPitfalls.map(pitfall => (
+                <View key={pitfall.id} className={styles.pitfallCard} onClick={handlePitfallClick}>
+                  <View className={styles.pitfallHeader}>
+                    <View className={styles.pitfallBadge}>
+                      <Text className={pitfall.severity === 'high' ? styles.badgeHigh : 
+                        pitfall.severity === 'medium' ? styles.badgeMedium : styles.badgeLow}>
+                        {pitfall.severity === 'high' ? '高危' : pitfall.severity === 'medium' ? '中危' : '低危'}
+                      </Text>
+                    </View>
+                    <View 
+                      className={styles.collectBtn}
+                      onClick={(e) => handleTogglePitfallCollect(pitfall.id, e)}
+                    >
+                      <Text className={styles.collectIcon}>
+                        {isPitfallCollected(pitfall.id) ? '❤️' : '🤍'}
+                      </Text>
+                    </View>
+                  </View>
+                  <Text className={styles.pitfallTitle}>{pitfall.title}</Text>
+                  <Text className={styles.pitfallDesc}>{pitfall.description}</Text>
+                  <View className={styles.pitfallPets}>
+                    {pitfall.petTypes.map(type => (
+                      <Text key={type} className={styles.petBadge}>
+                        {type === 'cat' ? '🐱' : type === 'dog' ? '🐶' : type === 'rabbit' ? '🐰' : '🐦'}
+                      </Text>
+                    ))}
+                  </View>
+                </View>
+              ))}
+            </View>
+          )}
+
+          {filteredGlossary.length > 0 && (
+            <View className={styles.searchSection}>
+              <Text className={styles.sectionTitle}>
+                📖 匹配的术语
+                <Text className={styles.count}>（{filteredGlossary.length}个）</Text>
+              </Text>
+              {filteredGlossary.map(term => (
+                <View key={term.id} className={styles.glossaryCard} onClick={handleGlossaryClick}>
                   <Text className={styles.glossaryTerm}>{term.term}</Text>
                   <Text className={styles.glossaryDef}>{term.definition}</Text>
+                  <Text className={styles.glossaryCategory}>{term.category}</Text>
                 </View>
               ))}
             </View>
@@ -218,7 +243,8 @@ const KnowledgePage: React.FC = () => {
           {filteredArticles.length > 0 && (
             <View className={styles.articleList}>
               <Text className={styles.sectionTitle}>
-                {searchKeyword ? `找到 ${filteredArticles.length} 篇相关文章` : '热门文章'}
+                📚 {searchKeyword ? '匹配的文章' : '热门文章'}
+                <Text className={styles.count}>（{filteredArticles.length}篇）</Text>
               </Text>
               {filteredArticles.map(article => (
                 <View
@@ -235,7 +261,7 @@ const KnowledgePage: React.FC = () => {
                     <Text className={styles.articleTitle}>
                       {article.title}
                       {article.isHot && <Text className={styles.hotBadge}>热</Text>}
-                      {isCollected(article.id) && <Text className={styles.collectedBadge}>⭐</Text>}
+                      {isArticleCollected(article.id) && <Text className={styles.collectedBadge}>⭐</Text>}
                     </Text>
                     <Text className={styles.articleSummary}>{article.summary}</Text>
                     <View className={styles.articleMeta}>
@@ -248,10 +274,10 @@ const KnowledgePage: React.FC = () => {
                   </View>
                   <View 
                     className={styles.collectBtn}
-                    onClick={(e) => handleToggleCollect(article.id, e)}
+                    onClick={(e) => handleToggleArticleCollect(article.id, e)}
                   >
                     <Text className={styles.collectIcon}>
-                      {isCollected(article.id) ? '❤️' : '🤍'}
+                      {isArticleCollected(article.id) ? '❤️' : '🤍'}
                     </Text>
                   </View>
                 </View>

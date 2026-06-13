@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import Taro from '@tarojs/taro';
 import { PetProfile } from '../types/pet';
 import { Question } from '../types/question';
 import { StorageService } from '../services/storage';
@@ -8,14 +7,18 @@ import { mockQuestions } from '../data/mockQuestions';
 
 interface AppContextType {
   petProfiles: PetProfile[];
-  collections: string[];
+  collectionsArticles: string[];
+  collectionsPitfalls: string[];
   questionHistory: Question[];
   addPetProfile: (profile: PetProfile) => void;
   updatePetProfile: (id: string, profile: PetProfile) => void;
   deletePetProfile: (id: string) => void;
-  addCollection: (id: string) => void;
-  removeCollection: (id: string) => void;
-  isCollected: (id: string) => boolean;
+  addArticleCollection: (id: string) => void;
+  removeArticleCollection: (id: string) => void;
+  isArticleCollected: (id: string) => boolean;
+  addPitfallCollection: (id: string) => void;
+  removePitfallCollection: (id: string) => void;
+  isPitfallCollected: (id: string) => boolean;
   addQuestion: (question: Question) => void;
   refreshData: () => void;
 }
@@ -24,7 +27,8 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [petProfiles, setPetProfiles] = useState<PetProfile[]>([]);
-  const [collections, setCollections] = useState<string[]>([]);
+  const [collectionsArticles, setCollectionsArticles] = useState<string[]>([]);
+  const [collectionsPitfalls, setCollectionsPitfalls] = useState<string[]>([]);
   const [questionHistory, setQuestionHistory] = useState<Question[]>([]);
 
   useEffect(() => {
@@ -40,7 +44,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       setPetProfiles(mockPetProfiles);
     }
 
-    setCollections(StorageService.getCollections());
+    setCollectionsArticles(StorageService.getCollectionsArticles());
+    setCollectionsPitfalls(StorageService.getCollectionsPitfalls());
     setQuestionHistory(StorageService.getQuestionHistory());
   };
 
@@ -51,35 +56,44 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const addPetProfile = (profile: PetProfile) => {
     const updated = StorageService.addPetProfile(profile);
     setPetProfiles([...updated]);
-    Taro.showToast({ title: '添加成功', icon: 'success' });
   };
 
   const updatePetProfile = (id: string, profile: PetProfile) => {
     const updated = StorageService.updatePetProfile(id, profile);
     setPetProfiles([...updated]);
-    Taro.showToast({ title: '保存成功', icon: 'success' });
   };
 
   const deletePetProfile = (id: string) => {
     const updated = StorageService.deletePetProfile(id);
     setPetProfiles([...updated]);
-    Taro.showToast({ title: '删除成功', icon: 'success' });
   };
 
-  const addCollection = (id: string) => {
-    const updated = StorageService.addCollection(id);
-    setCollections([...updated]);
-    Taro.showToast({ title: '收藏成功', icon: 'success' });
+  const addArticleCollection = (id: string) => {
+    const updated = StorageService.addArticleCollection(id);
+    setCollectionsArticles([...updated]);
   };
 
-  const removeCollection = (id: string) => {
-    const updated = StorageService.removeCollection(id);
-    setCollections([...updated]);
-    Taro.showToast({ title: '已取消收藏', icon: 'success' });
+  const removeArticleCollection = (id: string) => {
+    const updated = StorageService.removeArticleCollection(id);
+    setCollectionsArticles([...updated]);
   };
 
-  const isCollected = (id: string): boolean => {
-    return collections.includes(id);
+  const isArticleCollected = (id: string): boolean => {
+    return collectionsArticles.includes(id);
+  };
+
+  const addPitfallCollection = (id: string) => {
+    const updated = StorageService.addPitfallCollection(id);
+    setCollectionsPitfalls([...updated]);
+  };
+
+  const removePitfallCollection = (id: string) => {
+    const updated = StorageService.removePitfallCollection(id);
+    setCollectionsPitfalls([...updated]);
+  };
+
+  const isPitfallCollected = (id: string): boolean => {
+    return collectionsPitfalls.includes(id);
   };
 
   const addQuestion = (question: Question) => {
@@ -91,14 +105,18 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     <AppContext.Provider
       value={{
         petProfiles,
-        collections,
+        collectionsArticles,
+        collectionsPitfalls,
         questionHistory,
         addPetProfile,
         updatePetProfile,
         deletePetProfile,
-        addCollection,
-        removeCollection,
-        isCollected,
+        addArticleCollection,
+        removeArticleCollection,
+        isArticleCollected,
+        addPitfallCollection,
+        removePitfallCollection,
+        isPitfallCollected,
         addQuestion,
         refreshData
       }}

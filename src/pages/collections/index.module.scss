@@ -3,7 +3,61 @@
 .container {
   min-height: 100vh;
   background: $color-bg-page;
+}
+
+.tabBar {
+  display: flex;
+  background: $color-bg-card;
   padding: $spacing-md $page-padding;
+  border-bottom: 1rpx solid $color-border;
+}
+
+.tabItem {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-md 0;
+  border-radius: $radius-md;
+  transition: all $transition-base;
+  
+  &.active {
+    background: rgba($color-primary, 0.1);
+    
+    .tabText {
+      color: $color-primary;
+      font-weight: $font-weight-semibold;
+    }
+    
+    .tabCount {
+      background: $color-primary;
+      color: $color-text-white;
+    }
+  }
+  
+  .tabIcon {
+    font-size: 40rpx;
+    margin-bottom: $spacing-xs;
+  }
+  
+  .tabText {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    margin-bottom: $spacing-xs;
+  }
+  
+  .tabCount {
+    font-size: 20rpx;
+    padding: 4rpx 12rpx;
+    background: $color-border;
+    border-radius: $radius-round;
+    color: $color-text-tertiary;
+  }
+}
+
+.content {
+  padding: $spacing-md $page-padding;
+  height: calc(100vh - 200rpx);
 }
 
 .emptyState {
@@ -11,7 +65,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: $spacing-xl * 2;
+  padding: $spacing-xl * 3;
   text-align: center;
   
   .emptyIcon {
@@ -32,35 +86,39 @@
   }
 }
 
-.collectionList {
-  margin-bottom: $spacing-lg;
+.sectionTitle {
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+  display: block;
 }
 
-.collectionCard {
+.articleCard {
   background: $color-bg-card;
   border-radius: $radius-md;
   padding: $spacing-md;
   margin-bottom: $spacing-md;
-  box-shadow: $shadow-card;
   display: flex;
+  box-shadow: $shadow-card;
   
   &:active {
     opacity: 0.9;
   }
   
-  .collectionImage {
+  .articleImage {
     width: 200rpx;
     height: 160rpx;
     border-radius: $radius-sm;
     margin-right: $spacing-md;
   }
   
-  .collectionContent {
+  .articleContent {
     flex: 1;
     display: flex;
     flex-direction: column;
     
-    .collectionTitle {
+    .articleTitle {
       font-size: $font-size-md;
       font-weight: $font-weight-semibold;
       color: $color-text-primary;
@@ -68,7 +126,7 @@
       @include text-ellipsis-multi(2);
     }
     
-    .collectionSummary {
+    .articleSummary {
       flex: 1;
       font-size: $font-size-sm;
       color: $color-text-secondary;
@@ -76,12 +134,12 @@
       margin-bottom: $spacing-sm;
     }
     
-    .collectionFooter {
+    .articleFooter {
       display: flex;
       align-items: center;
       justify-content: space-between;
       
-      .collectionMeta {
+      .articleMeta {
         display: flex;
         align-items: center;
         
@@ -101,11 +159,21 @@
       }
       
       .uncollectBtn {
+        display: flex;
+        align-items: center;
         padding: $spacing-xs $spacing-sm;
         background: rgba($color-error, 0.1);
         border-radius: $radius-button;
-        font-size: $font-size-xs;
-        color: $color-error;
+        
+        .uncollectIcon {
+          font-size: 28rpx;
+          margin-right: 4rpx;
+        }
+        
+        .uncollectText {
+          font-size: $font-size-xs;
+          color: $color-error;
+        }
       }
     }
   }
@@ -119,41 +187,80 @@
   box-shadow: $shadow-card;
   border-left: 8rpx solid $color-warning;
   
-  .cardHeader {
+  &:active {
+    opacity: 0.9;
+  }
+  
+  .pitfallHeader {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: $spacing-sm;
     
-    .severityTag {
+    .severityBadge {
       font-size: $font-size-xs;
       color: $color-text-white;
-      background: $color-warning;
       padding: 4rpx 12rpx;
       border-radius: $radius-xs;
+      
+      &.severityHigh {
+        background: $color-error;
+      }
+      
+      &.severityMedium {
+        background: $color-warning;
+      }
+      
+      &.severityLow {
+        background: $color-info;
+      }
+    }
+    
+    .uncollectBtn {
+      display: flex;
+      align-items: center;
+      padding: $spacing-xs $spacing-sm;
+      background: rgba($color-error, 0.1);
+      border-radius: $radius-button;
+      
+      .uncollectIcon {
+        font-size: 28rpx;
+        margin-right: 4rpx;
+      }
+      
+      .uncollectText {
+        font-size: $font-size-xs;
+        color: $color-error;
+      }
     }
   }
   
-  .cardTitle {
+  .pitfallTitle {
+    display: block;
     font-size: $font-size-md;
     font-weight: $font-weight-semibold;
     color: $color-text-primary;
     margin-bottom: $spacing-xs;
   }
   
-  .cardDesc {
+  .pitfallDesc {
+    display: block;
     font-size: $font-size-sm;
     color: $color-text-secondary;
     line-height: $line-height-loose;
+    margin-bottom: $spacing-sm;
+    @include text-ellipsis-multi(2);
   }
   
-  .uncollectBtn {
-    margin-top: $spacing-sm;
-    padding: $spacing-xs $spacing-sm;
-    background: rgba($color-error, 0.1);
-    border-radius: $radius-button;
-    font-size: $font-size-xs;
-    color: $color-error;
-    display: inline-block;
+  .pitfallPets {
+    display: flex;
+    gap: $spacing-xs;
+    
+    .petBadge {
+      font-size: 24rpx;
+      padding: 4rpx 8rpx;
+      background: rgba($color-primary, 0.1);
+      border-radius: $radius-xs;
+    }
   }
 }

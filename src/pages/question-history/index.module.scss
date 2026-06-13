@@ -3,28 +3,27 @@
 .container {
   min-height: 100vh;
   background: $color-bg-page;
-  padding: $spacing-md $page-padding;
 }
 
 .filterNav {
-  display: flex;
-  gap: $spacing-sm;
-  margin-bottom: $spacing-lg;
-  overflow-x: auto;
-  
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  background: $color-bg-card;
+  border-bottom: 1rpx solid $color-border;
+  padding: $spacing-md 0;
+}
+
+.filterScroll {
+  padding: 0 $page-padding;
+  white-space: nowrap;
 }
 
 .filterItem {
-  flex-shrink: 0;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   padding: $spacing-sm $spacing-md;
-  background: $color-bg-card;
+  background: $color-bg-page;
   border-radius: $radius-button;
   border: 2rpx solid $color-border;
+  margin-right: $spacing-sm;
   transition: all $transition-base;
   
   &.active {
@@ -53,7 +52,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: $spacing-xl * 2;
+  padding: $spacing-xl * 3;
   text-align: center;
   
   .emptyIcon {
@@ -71,11 +70,20 @@
   .emptyDesc {
     font-size: $font-size-md;
     color: $color-text-secondary;
+    line-height: $line-height-loose;
   }
 }
 
 .historyList {
-  margin-bottom: $spacing-lg;
+  padding: $spacing-md $page-padding;
+  height: calc(100vh - 150rpx);
+}
+
+.historyCount {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  margin-bottom: $spacing-md;
+  display: block;
 }
 
 .historyCard {
@@ -85,9 +93,14 @@
   margin-bottom: $spacing-md;
   box-shadow: $shadow-card;
   
+  &:active {
+    opacity: 0.9;
+  }
+  
   .cardHeader {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     margin-bottom: $spacing-sm;
     
     .petBadge {
@@ -96,7 +109,6 @@
       background: rgba($color-primary, 0.1);
       padding: $spacing-xs $spacing-sm;
       border-radius: $radius-button;
-      margin-right: $spacing-sm;
       
       .petIcon {
         margin-right: 4rpx;
@@ -111,8 +123,8 @@
     
     .statusBadge {
       font-size: $font-size-xs;
-      color: $color-text-white;
-      background: $color-success;
+      color: $color-success;
+      background: rgba($color-success, 0.1);
       padding: 4rpx 12rpx;
       border-radius: $radius-xs;
     }

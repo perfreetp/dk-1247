@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, Textarea, Input, Image } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import styles from './index.module.scss';
+import { useAppContext } from '@/store/AppContext';
+import { Question } from '@/types/question';
 
 const AskPage: React.FC = () => {
   const [selectedPetType, setSelectedPetType] = useState<string>('');
@@ -10,6 +12,7 @@ const AskPage: React.FC = () => {
   const [age, setAge] = useState('');
   const [diet, setDiet] = useState('');
   const [images, setImages] = useState<string[]>([]);
+  const { addQuestion } = useAppContext();
 
   const petTypes = [
     { type: 'cat', name: '🐱 猫', icon: '🐱' },
@@ -20,7 +23,7 @@ const AskPage: React.FC = () => {
 
   const handleUploadImage = () => {
     Taro.chooseImage({
-      count: 3,
+      count: 3 - images.length,
       sizeType: ['compressed'],
       sourceType: ['album', 'camera'],
       success: (res) => {
@@ -50,8 +53,26 @@ const AskPage: React.FC = () => {
       return;
     }
 
+    const newQuestion: Question = {
+      id: Date.now().toString(),
+      title: `宠物健康问题咨询（${petTypes.find(p => p.type === selectedPetType)?.name}）`,
+      content: symptoms,
+      petType: selectedPetType as 'cat' | 'dog' | 'rabbit' | 'bird',
+      category: 'health',
+      petInfo: {
+        breed: breed,
+        age: parseFloat(age) || 0,
+        diet: diet
+      },
+      images: images,
+      createdAt: new Date().toISOString().split('T')[0],
+      status: 'answered'
+    };
+
+    addQuestion(newQuestion);
+
     Taro.navigateTo({
-      url: `/pages/answer/index?petType=${selectedPetType}&symptoms=${encodeURIComponent(symptoms)}&breed=${encodeURIComponent(breed)}&age=${encodeURIComponent(age)}&diet=${encodeURIComponent(diet)}`
+      url: `/pages/answer/index?id=${newQuestion.id}&petType=${selectedPetType}&symptoms=${encodeURIComponent(symptoms)}&breed=${encodeURIComponent(breed)}&age=${encodeURIComponent(age)}&diet=${encodeURIComponent(diet)}`
     });
   };
 

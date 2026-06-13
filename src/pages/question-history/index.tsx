@@ -2,28 +2,34 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import styles from './index.module.scss';
-import { useAppContext } from '@/store/AppContext';
 import { mockQuestions } from '@/data/mockQuestions';
+import { useAppContext } from '@/store/AppContext';
 
 const QuestionHistoryPage: React.FC = () => {
-  const [selectedPetType, setSelectedPetType] = useState<string>('all');
+  const [selectedPetId, setSelectedPetId] = useState<string>('all');
   const [historyList, setHistoryList] = useState(mockQuestions);
-  const { questionHistory } = useAppContext();
+  const { questionHistory, petProfiles } = useAppContext();
 
   useEffect(() => {
     filterHistory();
-  }, [selectedPetType]);
+  }, [selectedPetId]);
 
   const filterHistory = () => {
-    let filtered;
-    if (selectedPetType === 'all') {
-      filtered = [...mockQuestions, ...questionHistory];
+    const allQuestions = [...mockQuestions, ...questionHistory];
+    
+    if (selectedPetId === 'all') {
+      setHistoryList(allQuestions);
+    } else if (selectedPetId === 'no-pet') {
+      setHistoryList(allQuestions.filter(q => !q.petInfo?.breed));
     } else {
-      filtered = [...mockQuestions, ...questionHistory].filter(
-        q => q.petType === selectedPetType
-      );
+      const selectedProfile = petProfiles.find(p => p.id === selectedPetId);
+      if (selectedProfile) {
+        setHistoryList(allQuestions.filter(q => 
+          q.petType === selectedProfile.pet.type && 
+          (q.petInfo?.breed === selectedProfile.pet.breed || !q.petInfo?.breed)
+        ));
+      }
     }
-    setHistoryList(filtered);
   };
 
   const getPetEmoji = (type: string) => {
@@ -48,6 +54,16 @@ const QuestionHistoryPage: React.FC = () => {
     return names[type] || '宠物';
   };
 
+  const getCategoryName = (category: string) => {
+    const names: Record<string, string> = {
+      feeding: '💊 喂养',
+      care: '🧹 护理',
+      behavior: '🧠 行为',
+      health: '🏥 疾病'
+    };
+    return names[category] || '🏥 其他';
+  };
+
   const handleViewAnswer = (questionId: string) => {
     Taro.navigateTo({
       url: `/pages/answer/index?id=${questionId}`
@@ -55,26 +71,31 @@ const QuestionHistoryPage: React.FC = () => {
   };
 
   const filterOptions = [
-    { type: 'all', name: '全部', icon: '🐾' },
-    { type: 'cat', name: '猫咪', icon: '🐱' },
-    { type: 'dog', name: '狗狗', icon: '🐶' },
-    { type: 'rabbit', name: '兔子', icon: '🐰' },
-    { type: 'bird', name: '鸟类', icon: '🐦' }
+    { id: 'all', name: '全部', icon: '🐾', type: 'all' },
+    ...petProfiles.map(profile => ({
+      id: profile.id,
+      name: profile.pet.name,
+      icon: getPetEmoji(profile.pet.type),
+      type: profile.pet.type
+    })),
+    { id: 'no-pet', name: '未指定宠物', icon: '❓', type: 'unknown' }
   ];
 
   return (
     <View className={styles.container}>
       <View className={styles.filterNav}>
-        {filterOptions.map(option => (
-          <View
-            key={option.type}
-            className={`${styles.filterItem} ${selectedPetType === option.type ? styles.active : ''}`}
-            onClick={() => setSelectedPetType(option.type)}
-          >
-            <Text className={styles.filterIcon}>{option.icon}</Text>
-            <Text className={styles.filterText}>{option.name}</Text>
-          </View>
-        ))}
+        <ScrollView scrollX enableFlex className={styles.filterScroll}>
+          {filterOptions.map(option => (
+            <View
+              key={option.id}
+              className={`${styles.filterItem} ${selectedPetId === option.id ? styles.active : ''}`}
+              onClick={() => setSelectedPetId(option.id)}
+            >
+              <Text className={styles.filterIcon}>{option.icon}</Text>
+              <Text className={styles.filterText}>{option.name}</Text>
+            </View>
+          ))}
+        </ScrollView>
       </View>
 
       {historyList.length === 0 ? (
@@ -86,7 +107,10 @@ const QuestionHistoryPage: React.FC = () => {
           </Text>
         </View>
       ) : (
-        <View className={styles.historyList}>
+        <ScrollView className={styles.historyList} scrollY>
+          <Text className={styles.historyCount}>
+            共 {historyList.length} 条记录
+          </Text>
           {historyList.map(question => (
             <View
               key={question.id}
@@ -98,23 +122,21 @@ const QuestionHistoryPage: React.FC = () => {
                   <Text className={styles.petIcon}>{getPetEmoji(question.petType)}</Text>
                   <Text className={styles.petType}>{getPetName(question.petType)}</Text>
                 </View>
-                <Text className={styles.statusBadge}>
-                  {question.status === 'answered' ? '已解答' : '待解答'}
-                </Text>
+                <View className={styles.statusBadge}>
+                  {question.status === 'answered' ? '✓ 已解答' : '⏳ 待解答'}
+                </View>
               </View>
               <Text className={styles.cardTitle}>{question.title}</Text>
               <Text className={styles.cardContent}>{question.content}</Text>
               <View className={styles.cardFooter}>
                 <Text className={styles.cardMeta}>
-                  {question.createdAt} · {question.category === 'feeding' ? '💊 喂养' :
-                   question.category === 'care' ? '🧹 护理' :
-                   question.category === 'behavior' ? '🧠 行为' : '🏥 疾病'}
+                  {question.createdAt} · {getCategoryName(question.category)}
                 </Text>
                 <Text className={styles.viewBtn}>查看回答 ›</Text>
               </View>
             </View>
           ))}
-        </View>
+        </ScrollView>
       )}
     </View>
   );
