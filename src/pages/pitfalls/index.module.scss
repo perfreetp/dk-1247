@@ -1,0 +1,117 @@
+@use '@/styles/variables.scss' as *;
+
+.container {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding: $spacing-md $page-padding;
+}
+
+.warningBanner {
+  background: linear-gradient(135deg, $color-warning 0%, #ffb347 100%);
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-lg;
+  display: flex;
+  align-items: center;
+  
+  .bannerIcon {
+    width: 100rpx;
+    height: 100rpx;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: $radius-round;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: $spacing-md;
+    font-size: 48rpx;
+  }
+  
+  .bannerContent {
+    flex: 1;
+    
+    .bannerTitle {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-bold;
+      color: $color-text-white;
+      margin-bottom: 8rpx;
+    }
+    
+    .bannerDesc {
+      font-size: $font-size-sm;
+      color: rgba(255, 255, 255, 0.9);
+      line-height: $line-height-loose;
+    }
+  }
+}
+
+.pitfallCard {
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  border-left: 8rpx solid;
+  
+  &.high {
+    border-left-color: $color-error;
+    
+    .severityTag {
+      background: $color-error;
+    }
+  }
+  
+  &.medium {
+    border-left-color: $color-warning;
+    
+    .severityTag {
+      background: $color-warning;
+    }
+  }
+  
+  &.low {
+    border-left-color: $color-info;
+    
+    .severityTag {
+      background: $color-info;
+    }
+  }
+  
+  .cardHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $spacing-sm;
+    
+    .severityTag {
+      font-size: $font-size-xs;
+      color: $color-text-white;
+      padding: 4rpx 12rpx;
+      border-radius: $radius-xs;
+    }
+    
+    .petTypes {
+      display: flex;
+      gap: $spacing-xs;
+      
+      .petBadge {
+        font-size: 20rpx;
+        padding: 4rpx 8rpx;
+        background: rgba($color-primary, 0.1);
+        border-radius: $radius-xs;
+      }
+    }
+  }
+  
+  .cardTitle {
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-sm;
+  }
+  
+  .cardDesc {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    line-height: $line-height-loose;
+  }
+}

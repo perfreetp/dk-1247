@@ -32,6 +32,59 @@
   }
 }
 
+.clearBtn {
+  padding: $spacing-xs;
+  
+  .clearIcon {
+    font-size: 28rpx;
+    color: $color-text-tertiary;
+  }
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-xl * 2;
+  text-align: center;
+  
+  .emptyIcon {
+    font-size: 120rpx;
+    margin-bottom: $spacing-lg;
+  }
+  
+  .emptyTitle {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-sm;
+  }
+  
+  .emptyDesc {
+    font-size: $font-size-md;
+    color: $color-text-secondary;
+    margin-bottom: $spacing-lg;
+  }
+  
+  .emptySuggestion {
+    font-size: $font-size-sm;
+    color: $color-text-tertiary;
+    line-height: $line-height-loose;
+    text-align: left;
+  }
+}
+
+.searchResults {
+  margin-bottom: $spacing-md;
+  
+  .searchResultsTitle {
+    font-size: $font-size-md;
+    color: $color-primary;
+    font-weight: $font-weight-medium;
+  }
+}
+
 .categoryNav {
   display: flex;
   gap: $spacing-sm;
@@ -140,6 +193,33 @@
   }
 }
 
+.glossaryPreview {
+  margin-bottom: $spacing-lg;
+}
+
+.glossaryItem {
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-sm;
+  box-shadow: $shadow-card;
+  
+  .glossaryTerm {
+    display: block;
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    color: $color-primary;
+    margin-bottom: 8rpx;
+  }
+  
+  .glossaryDef {
+    display: block;
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    line-height: $line-height-loose;
+  }
+}
+
 .articleList {
   margin-bottom: $spacing-lg;
 }
@@ -151,6 +231,7 @@
   margin-bottom: $spacing-md;
   display: flex;
   box-shadow: $shadow-card;
+  position: relative;
   
   &:active {
     opacity: 0.9;
@@ -173,6 +254,7 @@
       font-weight: $font-weight-semibold;
       color: $color-text-primary;
       margin-bottom: $spacing-xs;
+      padding-right: 80rpx;
       @include text-ellipsis-multi(2);
     }
     
@@ -203,6 +285,17 @@
       }
     }
   }
+  
+  .collectBtn {
+    position: absolute;
+    top: $spacing-md;
+    right: $spacing-md;
+    padding: $spacing-xs;
+    
+    .collectIcon {
+      font-size: 44rpx;
+    }
+  }
 }
 
 .hotBadge {
@@ -213,4 +306,9 @@
   padding: 2rpx 8rpx;
   border-radius: $radius-xs;
   margin-left: $spacing-xs;
+}
+
+.collectedBadge {
+  margin-left: $spacing-xs;
+  font-size: 24rpx;
 }

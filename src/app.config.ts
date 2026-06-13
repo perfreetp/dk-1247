@@ -6,7 +6,11 @@ export default defineAppConfig({
     'pages/profile/index',
     'pages/answer/index',
     'pages/emergency/index',
-    'pages/pet-profile/index'
+    'pages/pet-profile/index',
+    'pages/pitfalls/index',
+    'pages/glossary/index',
+    'pages/question-history/index',
+    'pages/collections/index'
   ],
   window: {
     backgroundTextStyle: 'light',

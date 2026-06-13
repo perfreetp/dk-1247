@@ -137,6 +137,25 @@
   }
 }
 
+.deleteButton {
+  width: 100%;
+  height: $button-height-md;
+  background: rgba($color-error, 0.1);
+  border: 2rpx solid $color-error;
+  border-radius: $radius-button;
+  color: $color-error;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: $spacing-md;
+  
+  &:active {
+    opacity: 0.9;
+  }
+}
+
 .buttonGroup {
   display: flex;
   gap: $spacing-md;

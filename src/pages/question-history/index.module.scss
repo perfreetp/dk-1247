@@ -1,0 +1,151 @@
+@use '@/styles/variables.scss' as *;
+
+.container {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding: $spacing-md $page-padding;
+}
+
+.filterNav {
+  display: flex;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+  overflow-x: auto;
+  
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.filterItem {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  padding: $spacing-sm $spacing-md;
+  background: $color-bg-card;
+  border-radius: $radius-button;
+  border: 2rpx solid $color-border;
+  transition: all $transition-base;
+  
+  &.active {
+    background: $color-primary;
+    border-color: $color-primary;
+    
+    .filterText {
+      color: $color-text-white;
+    }
+  }
+  
+  .filterIcon {
+    font-size: 28rpx;
+    margin-right: $spacing-xs;
+  }
+  
+  .filterText {
+    font-size: $font-size-sm;
+    color: $color-text-primary;
+    white-space: nowrap;
+  }
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-xl * 2;
+  text-align: center;
+  
+  .emptyIcon {
+    font-size: 120rpx;
+    margin-bottom: $spacing-lg;
+  }
+  
+  .emptyTitle {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-sm;
+  }
+  
+  .emptyDesc {
+    font-size: $font-size-md;
+    color: $color-text-secondary;
+  }
+}
+
+.historyList {
+  margin-bottom: $spacing-lg;
+}
+
+.historyCard {
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  
+  .cardHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: $spacing-sm;
+    
+    .petBadge {
+      display: flex;
+      align-items: center;
+      background: rgba($color-primary, 0.1);
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $radius-button;
+      margin-right: $spacing-sm;
+      
+      .petIcon {
+        margin-right: 4rpx;
+        font-size: 28rpx;
+      }
+      
+      .petType {
+        font-size: $font-size-xs;
+        color: $color-primary;
+      }
+    }
+    
+    .statusBadge {
+      font-size: $font-size-xs;
+      color: $color-text-white;
+      background: $color-success;
+      padding: 4rpx 12rpx;
+      border-radius: $radius-xs;
+    }
+  }
+  
+  .cardTitle {
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-xs;
+    @include text-ellipsis-multi(2);
+  }
+  
+  .cardContent {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    @include text-ellipsis-multi(2);
+    margin-bottom: $spacing-sm;
+  }
+  
+  .cardFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    .cardMeta {
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+    }
+    
+    .viewBtn {
+      font-size: $font-size-sm;
+      color: $color-primary;
+    }
+  }
+}

@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, Input, Textarea } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import styles from './index.module.scss';
+import { useAppContext } from '@/store/AppContext';
+import { PetProfile } from '@/types/pet';
 
 const PetProfilePage: React.FC = () => {
+  const { addPetProfile, updatePetProfile, petProfiles, deletePetProfile } = useAppContext();
   const [petName, setPetName] = useState('');
   const [petType, setPetType] = useState<string>('');
   const [breed, setBreed] = useState('');
@@ -13,11 +16,28 @@ const PetProfilePage: React.FC = () => {
   const [allergies, setAllergies] = useState('');
   const [medications, setMedications] = useState('');
   const [notes, setNotes] = useState('');
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
 
   useEffect(() => {
     const { id } = Taro.getCurrentInstance().router?.params || {};
+    
     if (id) {
-      Taro.setNavigationBarTitle({ title: '编辑宠物' });
+      const profile = petProfiles.find(p => p.id === id);
+      if (profile) {
+        Taro.setNavigationBarTitle({ title: '编辑宠物' });
+        setIsEditMode(true);
+        setEditingId(id);
+        setPetName(profile.pet.name);
+        setPetType(profile.pet.type);
+        setBreed(profile.pet.breed);
+        setAge(profile.pet.age.toString());
+        setGender(profile.pet.gender);
+        setWeight(profile.weight?.toString() || '');
+        setAllergies(profile.allergies?.join('、') || '');
+        setMedications(profile.medications?.join('、') || '');
+        setNotes(profile.notes || '');
+      }
     } else {
       Taro.setNavigationBarTitle({ title: '添加宠物' });
     }
@@ -29,6 +49,10 @@ const PetProfilePage: React.FC = () => {
     { type: 'rabbit', name: '🐰 兔', icon: '🐰' },
     { type: 'bird', name: '🐦 鸟', icon: '🐦' }
   ];
+
+  const generateId = () => {
+    return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+  };
 
   const handleSave = () => {
     if (!petName.trim()) {
@@ -44,14 +68,48 @@ const PetProfilePage: React.FC = () => {
       return;
     }
 
-    Taro.showToast({
-      title: '保存成功',
-      icon: 'success'
-    });
+    const profileData: PetProfile = {
+      id: isEditMode && editingId ? editingId : generateId(),
+      pet: {
+        id: isEditMode && editingId ? editingId : generateId(),
+        name: petName.trim(),
+        type: petType as 'cat' | 'dog' | 'rabbit' | 'bird',
+        breed: breed.trim(),
+        age: parseFloat(age) || 0,
+        gender: gender as 'male' | 'female'
+      },
+      weight: weight ? parseFloat(weight) : undefined,
+      allergies: allergies ? allergies.split('、').filter(Boolean) : [],
+      medications: medications ? medications.split('、').filter(Boolean) : [],
+      notes: notes.trim()
+    };
+
+    if (isEditMode && editingId) {
+      updatePetProfile(editingId, profileData);
+    } else {
+      addPetProfile(profileData);
+    }
 
     setTimeout(() => {
       Taro.navigateBack();
     }, 1500);
+  };
+
+  const handleDelete = () => {
+    if (!editingId) return;
+
+    Taro.showModal({
+      title: '确认删除',
+      content: `确定要删除宠物"${petName}"吗？`,
+      success: (res) => {
+        if (res.confirm) {
+          deletePetProfile(editingId);
+          setTimeout(() => {
+            Taro.navigateBack();
+          }, 1500);
+        }
+      }
+    });
   };
 
   const handleCancel = () => {
@@ -151,7 +209,7 @@ const PetProfilePage: React.FC = () => {
           <Text className={styles.inputLabel}>过敏史</Text>
           <Textarea
             className={styles.textareaField}
-            placeholder="请描述宠物的过敏情况，如：对某些食物或药物过敏"
+            placeholder="请描述宠物的过敏情况，如：对某些食物或药物过敏，多个过敏源用顿号分隔"
             value={allergies}
             onInput={(e) => setAllergies(e.detail.value)}
             maxlength={200}
@@ -162,7 +220,7 @@ const PetProfilePage: React.FC = () => {
           <Text className={styles.inputLabel}>用药情况</Text>
           <Textarea
             className={styles.textareaField}
-            placeholder="请描述宠物的用药情况，如：正在服用什么药物"
+            placeholder="请描述宠物的用药情况，如：正在服用什么药物，多个药物用顿号分隔"
             value={medications}
             onInput={(e) => setMedications(e.detail.value)}
             maxlength={200}
@@ -180,6 +238,12 @@ const PetProfilePage: React.FC = () => {
           />
         </View>
       </View>
+
+      {isEditMode && (
+        <View className={styles.deleteButton} onClick={handleDelete}>
+          删除宠物
+        </View>
+      )}
 
       <View className={styles.buttonGroup}>
         <View className={`${styles.button} ${styles.cancelButton}`} onClick={handleCancel}>

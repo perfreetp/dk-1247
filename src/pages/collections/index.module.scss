@@ -1,0 +1,159 @@
+@use '@/styles/variables.scss' as *;
+
+.container {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding: $spacing-md $page-padding;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-xl * 2;
+  text-align: center;
+  
+  .emptyIcon {
+    font-size: 120rpx;
+    margin-bottom: $spacing-lg;
+  }
+  
+  .emptyTitle {
+    font-size: $font-size-xl;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-sm;
+  }
+  
+  .emptyDesc {
+    font-size: $font-size-md;
+    color: $color-text-secondary;
+  }
+}
+
+.collectionList {
+  margin-bottom: $spacing-lg;
+}
+
+.collectionCard {
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  display: flex;
+  
+  &:active {
+    opacity: 0.9;
+  }
+  
+  .collectionImage {
+    width: 200rpx;
+    height: 160rpx;
+    border-radius: $radius-sm;
+    margin-right: $spacing-md;
+  }
+  
+  .collectionContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    
+    .collectionTitle {
+      font-size: $font-size-md;
+      font-weight: $font-weight-semibold;
+      color: $color-text-primary;
+      margin-bottom: $spacing-xs;
+      @include text-ellipsis-multi(2);
+    }
+    
+    .collectionSummary {
+      flex: 1;
+      font-size: $font-size-sm;
+      color: $color-text-secondary;
+      @include text-ellipsis-multi(2);
+      margin-bottom: $spacing-sm;
+    }
+    
+    .collectionFooter {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      
+      .collectionMeta {
+        display: flex;
+        align-items: center;
+        
+        .tag {
+          font-size: $font-size-xs;
+          color: $color-primary;
+          background: rgba($color-primary, 0.1);
+          padding: 4rpx 12rpx;
+          border-radius: $radius-xs;
+          margin-right: $spacing-sm;
+        }
+        
+        .readTime {
+          font-size: $font-size-xs;
+          color: $color-text-tertiary;
+        }
+      }
+      
+      .uncollectBtn {
+        padding: $spacing-xs $spacing-sm;
+        background: rgba($color-error, 0.1);
+        border-radius: $radius-button;
+        font-size: $font-size-xs;
+        color: $color-error;
+      }
+    }
+  }
+}
+
+.pitfallCard {
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  border-left: 8rpx solid $color-warning;
+  
+  .cardHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: $spacing-sm;
+    
+    .severityTag {
+      font-size: $font-size-xs;
+      color: $color-text-white;
+      background: $color-warning;
+      padding: 4rpx 12rpx;
+      border-radius: $radius-xs;
+    }
+  }
+  
+  .cardTitle {
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-xs;
+  }
+  
+  .cardDesc {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    line-height: $line-height-loose;
+  }
+  
+  .uncollectBtn {
+    margin-top: $spacing-sm;
+    padding: $spacing-xs $spacing-sm;
+    background: rgba($color-error, 0.1);
+    border-radius: $radius-button;
+    font-size: $font-size-xs;
+    color: $color-error;
+    display: inline-block;
+  }
+}

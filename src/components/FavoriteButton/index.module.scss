@@ -1,0 +1,9 @@
+@use '@/styles/variables.scss' as *;
+
+.favoriteBtn {
+  padding: $spacing-xs;
+  
+  .icon {
+    font-size: 40rpx;
+  }
+}
