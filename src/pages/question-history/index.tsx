@@ -20,15 +20,9 @@ const QuestionHistoryPage: React.FC = () => {
     if (selectedPetId === 'all') {
       setHistoryList(allQuestions);
     } else if (selectedPetId === 'no-pet') {
-      setHistoryList(allQuestions.filter(q => !q.petInfo?.breed));
+      setHistoryList(allQuestions.filter(q => !q.petId));
     } else {
-      const selectedProfile = petProfiles.find(p => p.id === selectedPetId);
-      if (selectedProfile) {
-        setHistoryList(allQuestions.filter(q => 
-          q.petType === selectedProfile.pet.type && 
-          (q.petInfo?.breed === selectedProfile.pet.breed || !q.petInfo?.breed)
-        ));
-      }
+      setHistoryList(allQuestions.filter(q => q.petId === selectedPetId));
     }
   };
 
@@ -78,7 +72,7 @@ const QuestionHistoryPage: React.FC = () => {
       icon: getPetEmoji(profile.pet.type),
       type: profile.pet.type
     })),
-    { id: 'no-pet', name: '未指定宠物', icon: '❓', type: 'unknown' }
+    { id: 'no-pet', name: '未关联宠物', icon: '❓', type: 'unknown' }
   ];
 
   return (
@@ -103,39 +97,50 @@ const QuestionHistoryPage: React.FC = () => {
           <Text className={styles.emptyIcon}>📋</Text>
           <Text className={styles.emptyTitle}>暂无问答记录</Text>
           <Text className={styles.emptyDesc}>
-            您还没有提问记录，{'\n'}快去提问吧！
+            {selectedPetId === 'all' 
+              ? '您还没有提问记录，快去提问吧！'
+              : '这只宠物还没有提问记录'}
           </Text>
         </View>
       ) : (
         <ScrollView className={styles.historyList} scrollY>
           <Text className={styles.historyCount}>
-            共 {historyList.length} 条记录
+            {selectedPetId === 'all' 
+              ? `共 ${historyList.length} 条记录`
+              : `${filterOptions.find(o => o.id === selectedPetId)?.name} 的 ${historyList.length} 条记录`}
           </Text>
-          {historyList.map(question => (
-            <View
-              key={question.id}
-              className={styles.historyCard}
-              onClick={() => handleViewAnswer(question.id)}
-            >
-              <View className={styles.cardHeader}>
-                <View className={styles.petBadge}>
-                  <Text className={styles.petIcon}>{getPetEmoji(question.petType)}</Text>
-                  <Text className={styles.petType}>{getPetName(question.petType)}</Text>
+          {historyList.map(question => {
+            const relatedPet = petProfiles.find(p => p.id === question.petId);
+            return (
+              <View
+                key={question.id}
+                className={styles.historyCard}
+                onClick={() => handleViewAnswer(question.id)}
+              >
+                <View className={styles.cardHeader}>
+                  <View className={styles.petBadge}>
+                    <Text className={styles.petIcon}>
+                      {relatedPet ? getPetEmoji(relatedPet.pet.type) : getPetEmoji(question.petType)}
+                    </Text>
+                    <Text className={styles.petType}>
+                      {relatedPet ? relatedPet.pet.name : getPetName(question.petType)}
+                    </Text>
+                  </View>
+                  <View className={styles.statusBadge}>
+                    {question.status === 'answered' ? '✓ 已解答' : '⏳ 待解答'}
+                  </View>
                 </View>
-                <View className={styles.statusBadge}>
-                  {question.status === 'answered' ? '✓ 已解答' : '⏳ 待解答'}
+                <Text className={styles.cardTitle}>{question.title}</Text>
+                <Text className={styles.cardContent}>{question.content}</Text>
+                <View className={styles.cardFooter}>
+                  <Text className={styles.cardMeta}>
+                    {question.createdAt} · {getCategoryName(question.category)}
+                  </Text>
+                  <Text className={styles.viewBtn}>查看回答 ›</Text>
                 </View>
               </View>
-              <Text className={styles.cardTitle}>{question.title}</Text>
-              <Text className={styles.cardContent}>{question.content}</Text>
-              <View className={styles.cardFooter}>
-                <Text className={styles.cardMeta}>
-                  {question.createdAt} · {getCategoryName(question.category)}
-                </Text>
-                <Text className={styles.viewBtn}>查看回答 ›</Text>
-              </View>
-            </View>
-          ))}
+            );
+          })}
         </ScrollView>
       )}
     </View>

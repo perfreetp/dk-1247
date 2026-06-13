@@ -17,7 +17,7 @@ const CollectionsPage: React.FC = () => {
 
   const handleArticleClick = (articleId: string) => {
     Taro.navigateTo({
-      url: `/pages/knowledge/index?type=article&id=${articleId}`
+      url: `/pages/article-detail/index?id=${articleId}`
     });
   };
 

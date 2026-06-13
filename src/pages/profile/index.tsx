@@ -6,14 +6,22 @@ import { useAppContext } from '@/store/AppContext';
 import { mockQuestions } from '@/data/mockQuestions';
 
 const ProfilePage: React.FC = () => {
-  const { petProfiles, collections, refreshData } = useAppContext();
+  const { 
+    petProfiles, 
+    collectionsArticles, 
+    collectionsPitfalls, 
+    questionHistory,
+    refreshData 
+  } = useAppContext();
 
   useEffect(() => {
     refreshData();
   }, []);
 
-  const questionCount = mockQuestions.length;
-  const answerCount = mockQuestions.filter(q => q.status === 'answered').length;
+  const questionCount = mockQuestions.length + questionHistory.length;
+  const answerCount = mockQuestions.filter(q => q.status === 'answered').length + 
+                      questionHistory.filter(q => q.status === 'answered').length;
+  const collectionCount = collectionsArticles.length + collectionsPitfalls.length;
 
   const handleAddPet = () => {
     Taro.navigateTo({
@@ -90,7 +98,7 @@ const ProfilePage: React.FC = () => {
           </View>
           <View className={styles.statDivider} />
           <View className={styles.statItem}>
-            <Text className={styles.statValue}>{collections.length}</Text>
+            <Text className={styles.statValue}>{collectionCount}</Text>
             <Text className={styles.statLabel}>收藏</Text>
           </View>
         </View>
@@ -162,7 +170,9 @@ const ProfilePage: React.FC = () => {
             <View className={styles.menuIcon} style={{ background: 'rgba(255, 193, 7, 0.1)' }}>⭐</View>
             <View className={styles.menuContent}>
               <Text className={styles.menuTitle}>我的收藏</Text>
-              <Text className={styles.menuDesc}>收藏的文章和知识 · {collections.length}条</Text>
+              <Text className={styles.menuDesc}>
+                收藏的文章和知识 · {collectionsArticles.length}篇文章 · {collectionsPitfalls.length}条避坑
+              </Text>
             </View>
             <Text className={styles.arrowIcon}>›</Text>
           </View>

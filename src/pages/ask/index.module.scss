@@ -34,6 +34,58 @@
   gap: $spacing-sm;
 }
 
+.petSelectGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+}
+
+.petSelectItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-md;
+  border: 2rpx solid $color-border;
+  border-radius: $radius-md;
+  transition: all $transition-base;
+  
+  &.active {
+    border-color: $color-primary;
+    background: rgba($color-primary, 0.05);
+  }
+  
+  .petSelectIcon {
+    font-size: 48rpx;
+    margin-bottom: $spacing-xs;
+  }
+  
+  .petSelectName {
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: 4rpx;
+  }
+  
+  .petSelectBreed {
+    font-size: $font-size-xs;
+    color: $color-text-tertiary;
+  }
+}
+
+.hint {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  font-weight: $font-weight-normal;
+  margin-left: 8rpx;
+}
+
+.noPetsHint {
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+  text-align: center;
+  padding: $spacing-md 0;
+}
+
 .petTypeItem {
   display: flex;
   flex-direction: column;

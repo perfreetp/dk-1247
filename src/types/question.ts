@@ -14,6 +14,7 @@ export interface Question {
     symptoms?: string[];
     diet?: string;
   };
+  petId?: string;
   images?: string[];
   createdAt: string;
   status: 'pending' | 'answered' | 'closed';

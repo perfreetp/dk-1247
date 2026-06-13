@@ -10,7 +10,8 @@ export default defineAppConfig({
     'pages/pitfalls/index',
     'pages/glossary/index',
     'pages/question-history/index',
-    'pages/collections/index'
+    'pages/collections/index',
+    'pages/article-detail/index'
   ],
   window: {
     backgroundTextStyle: 'light',

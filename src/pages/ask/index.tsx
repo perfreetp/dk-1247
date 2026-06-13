@@ -7,12 +7,13 @@ import { Question } from '@/types/question';
 
 const AskPage: React.FC = () => {
   const [selectedPetType, setSelectedPetType] = useState<string>('');
+  const [selectedPetId, setSelectedPetId] = useState<string>('');
   const [symptoms, setSymptoms] = useState('');
   const [breed, setBreed] = useState('');
   const [age, setAge] = useState('');
   const [diet, setDiet] = useState('');
   const [images, setImages] = useState<string[]>([]);
-  const { addQuestion } = useAppContext();
+  const { addQuestion, petProfiles } = useAppContext();
 
   const petTypes = [
     { type: 'cat', name: '🐱 猫', icon: '🐱' },
@@ -20,6 +21,21 @@ const AskPage: React.FC = () => {
     { type: 'rabbit', name: '🐰 兔', icon: '🐰' },
     { type: 'bird', name: '🐦 鸟', icon: '🐦' }
   ];
+
+  const getPetEmoji = (type: string) => {
+    const emojis: Record<string, string> = {
+      cat: '🐱',
+      dog: '🐶',
+      rabbit: '🐰',
+      bird: '🐦'
+    };
+    return emojis[type] || '🐾';
+  };
+
+  const handlePetTypeSelect = (type: string) => {
+    setSelectedPetType(type);
+    setSelectedPetId('');
+  };
 
   const handleUploadImage = () => {
     Taro.chooseImage({
@@ -53,17 +69,21 @@ const AskPage: React.FC = () => {
       return;
     }
 
+    const selectedPet = petProfiles.find(p => p.id === selectedPetId);
+    const petName = selectedPet ? selectedPet.pet.name : '';
+    
     const newQuestion: Question = {
       id: Date.now().toString(),
-      title: `宠物健康问题咨询（${petTypes.find(p => p.type === selectedPetType)?.name}）`,
+      title: symptoms.length > 30 ? symptoms.substring(0, 30) + '...' : symptoms,
       content: symptoms,
       petType: selectedPetType as 'cat' | 'dog' | 'rabbit' | 'bird',
       category: 'health',
       petInfo: {
-        breed: breed,
-        age: parseFloat(age) || 0,
+        breed: selectedPet?.pet.breed || breed,
+        age: selectedPet?.pet.age || parseFloat(age) || 0,
         diet: diet
       },
+      petId: selectedPetId || undefined,
       images: images,
       createdAt: new Date().toISOString().split('T')[0],
       status: 'answered'
@@ -72,9 +92,11 @@ const AskPage: React.FC = () => {
     addQuestion(newQuestion);
 
     Taro.navigateTo({
-      url: `/pages/answer/index?id=${newQuestion.id}&petType=${selectedPetType}&symptoms=${encodeURIComponent(symptoms)}&breed=${encodeURIComponent(breed)}&age=${encodeURIComponent(age)}&diet=${encodeURIComponent(diet)}`
+      url: `/pages/answer/index?id=${newQuestion.id}&petType=${selectedPetType}&symptoms=${encodeURIComponent(symptoms)}&breed=${encodeURIComponent(selectedPet?.pet.breed || breed)}&age=${encodeURIComponent((selectedPet?.pet.age || age).toString())}&diet=${encodeURIComponent(diet)}&petId=${selectedPetId}`
     });
   };
+
+  const filteredPets = petProfiles.filter(p => p.pet.type === selectedPetType);
 
   return (
     <View className={styles.container}>
@@ -87,7 +109,7 @@ const AskPage: React.FC = () => {
             <View
               key={pet.type}
               className={`${styles.petTypeItem} ${selectedPetType === pet.type ? styles.active : ''}`}
-              onClick={() => setSelectedPetType(pet.type)}
+              onClick={() => handlePetTypeSelect(pet.type)}
             >
               <Text className={styles.petIcon}>{pet.icon}</Text>
               <Text className={styles.petName}>{pet.name}</Text>
@@ -95,6 +117,34 @@ const AskPage: React.FC = () => {
           ))}
         </View>
       </View>
+
+      {selectedPetType && (
+        <View className={styles.formCard}>
+          <Text className={styles.sectionTitle}>
+            选择具体宠物
+            <Text className={styles.hint}>（可选）</Text>
+          </Text>
+          {filteredPets.length > 0 ? (
+            <View className={styles.petSelectGrid}>
+              {filteredPets.map(pet => (
+                <View
+                  key={pet.id}
+                  className={`${styles.petSelectItem} ${selectedPetId === pet.id ? styles.active : ''}`}
+                  onClick={() => setSelectedPetId(pet.id)}
+                >
+                  <Text className={styles.petSelectIcon}>{getPetEmoji(pet.pet.type)}</Text>
+                  <Text className={styles.petSelectName}>{pet.pet.name}</Text>
+                  <Text className={styles.petSelectBreed}>{pet.pet.breed}</Text>
+                </View>
+              ))}
+            </View>
+          ) : (
+            <Text className={styles.noPetsHint}>
+              还没有添加这个类型的宠物，填写下面的信息
+            </Text>
+          )}
+        </View>
+      )}
 
       <View className={styles.formCard}>
         <Text className={styles.sectionTitle}>
@@ -109,29 +159,31 @@ const AskPage: React.FC = () => {
         />
       </View>
 
-      <View className={styles.formCard}>
-        <Text className={styles.sectionTitle}>宠物信息</Text>
-        <View className={styles.inputRow}>
-          <View className={styles.inputHalf}>
-            <Text className={styles.inputLabel}>品种</Text>
-            <Input
-              className={styles.inputField}
-              placeholder="如：英短、泰迪"
-              value={breed}
-              onInput={(e) => setBreed(e.detail.value)}
-            />
-          </View>
-          <View className={styles.inputHalf}>
-            <Text className={styles.inputLabel}>年龄</Text>
-            <Input
-              className={styles.inputField}
-              placeholder="如：2岁"
-              value={age}
-              onInput={(e) => setAge(e.detail.value)}
-            />
+      {!selectedPetId && (
+        <View className={styles.formCard}>
+          <Text className={styles.sectionTitle}>宠物信息</Text>
+          <View className={styles.inputRow}>
+            <View className={styles.inputHalf}>
+              <Text className={styles.inputLabel}>品种</Text>
+              <Input
+                className={styles.inputField}
+                placeholder="如：英短、泰迪"
+                value={breed}
+                onInput={(e) => setBreed(e.detail.value)}
+              />
+            </View>
+            <View className={styles.inputHalf}>
+              <Text className={styles.inputLabel}>年龄</Text>
+              <Input
+                className={styles.inputField}
+                placeholder="如：2岁"
+                value={age}
+                onInput={(e) => setAge(e.detail.value)}
+              />
+            </View>
           </View>
         </View>
-      </View>
+      )}
 
       <View className={styles.formCard}>
         <Text className={styles.sectionTitle}>饮食情况</Text>
