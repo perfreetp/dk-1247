@@ -1,0 +1,214 @@
+@use '@/styles/variables.scss' as *;
+
+.container {
+  min-height: 100vh;
+  background: $color-bg-page;
+}
+
+.profileHeader {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  padding: $spacing-xl $page-padding;
+  padding-top: calc($spacing-xl + env(safe-area-inset-top));
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+  
+  .avatar {
+    width: 120rpx;
+    height: 120rpx;
+    border-radius: $radius-round;
+    background: $color-bg-card;
+    margin-right: $spacing-md;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60rpx;
+  }
+  
+  .userDetail {
+    flex: 1;
+    
+    .userName {
+      font-size: $font-size-xl;
+      font-weight: $font-weight-semibold;
+      color: $color-text-white;
+      margin-bottom: 8rpx;
+    }
+    
+    .userDesc {
+      font-size: $font-size-sm;
+      color: rgba(255, 255, 255, 0.8);
+    }
+  }
+}
+
+.stats {
+  display: flex;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  
+  .statItem {
+    flex: 1;
+    text-align: center;
+    
+    .statValue {
+      font-size: $font-size-xl;
+      font-weight: $font-weight-bold;
+      color: $color-text-white;
+      margin-bottom: 4rpx;
+    }
+    
+    .statLabel {
+      font-size: $font-size-xs;
+      color: rgba(255, 255, 255, 0.8);
+    }
+  }
+  
+  .statDivider {
+    width: 1rpx;
+    background: rgba(255, 255, 255, 0.3);
+  }
+}
+
+.section {
+  padding: $spacing-md $page-padding;
+}
+
+.sectionTitle {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  .moreLink {
+    font-size: $font-size-sm;
+    color: $color-primary;
+  }
+}
+
+.petList {
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+}
+
+.petItem {
+  display: flex;
+  align-items: center;
+  padding: $spacing-md;
+  border-bottom: 1rpx solid $color-border;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  .petAvatar {
+    width: 100rpx;
+    height: 100rpx;
+    border-radius: $radius-md;
+    margin-right: $spacing-md;
+  }
+  
+  .petInfo {
+    flex: 1;
+    
+    .petName {
+      font-size: $font-size-md;
+      font-weight: $font-weight-semibold;
+      color: $color-text-primary;
+      margin-bottom: 4rpx;
+    }
+    
+    .petBreed {
+      font-size: $font-size-sm;
+      color: $color-text-secondary;
+      margin-bottom: 4rpx;
+    }
+    
+    .petMeta {
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+    }
+  }
+  
+  .editBtn {
+    padding: $spacing-xs $spacing-md;
+    background: rgba($color-primary, 0.1);
+    border-radius: $radius-button;
+    font-size: $font-size-sm;
+    color: $color-primary;
+  }
+}
+
+.addPetBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-lg;
+  color: $color-primary;
+  font-size: $font-size-md;
+  
+  .addIcon {
+    margin-right: $spacing-xs;
+    font-size: 36rpx;
+  }
+}
+
+.menuList {
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  overflow: hidden;
+  box-shadow: $shadow-card;
+  margin-top: $spacing-md;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  padding: $spacing-md;
+  border-bottom: 1rpx solid $color-border;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  .menuIcon {
+    width: 64rpx;
+    height: 64rpx;
+    background: rgba($color-primary, 0.1);
+    border-radius: $radius-md;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: $spacing-md;
+    font-size: 32rpx;
+  }
+  
+  .menuContent {
+    flex: 1;
+    
+    .menuTitle {
+      font-size: $font-size-md;
+      color: $color-text-primary;
+      margin-bottom: 4rpx;
+    }
+    
+    .menuDesc {
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+    }
+  }
+  
+  .arrowIcon {
+    color: $color-text-tertiary;
+    font-size: 32rpx;
+  }
+}

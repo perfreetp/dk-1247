@@ -1,0 +1,47 @@
+@use '@/styles/variables.scss' as *;
+
+.tipCard {
+  background: linear-gradient(135deg, $color-primary 0%, $color-primary-light 100%);
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin: $spacing-md 0;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.icon {
+  width: 64rpx;
+  height: 64rpx;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: $radius-round;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: $spacing-sm;
+}
+
+.iconText {
+  font-size: 32rpx;
+}
+
+.label {
+  font-size: $font-size-md;
+  color: $color-text-white;
+  font-weight: $font-weight-semibold;
+  flex: 1;
+}
+
+.date {
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.content {
+  font-size: $font-size-md;
+  color: $color-text-white;
+  line-height: $line-height-loose;
+}

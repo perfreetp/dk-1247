@@ -1,0 +1,61 @@
+@use '@/styles/variables.scss' as *;
+
+.petCard {
+  display: flex;
+  align-items: center;
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-sm;
+  box-shadow: $shadow-card;
+  transition: all $transition-base;
+  
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}
+
+.iconWrapper {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: $spacing-md;
+}
+
+.emoji {
+  font-size: 48rpx;
+}
+
+.info {
+  flex: 1;
+}
+
+.name {
+  display: block;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: 8rpx;
+}
+
+.desc {
+  display: block;
+  font-size: $font-size-sm;
+  color: $color-text-tertiary;
+}
+
+.badge {
+  background: rgba($color-primary, 0.1);
+  padding: 8rpx 16rpx;
+  border-radius: $radius-button;
+}
+
+.badgeText {
+  font-size: $font-size-xs;
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+}

@@ -1,0 +1,149 @@
+@use '@/styles/variables.scss' as *;
+
+.container {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding: $spacing-md $page-padding;
+}
+
+.header {
+  text-align: center;
+  padding: $spacing-lg 0;
+  
+  .title {
+    font-size: 48rpx;
+    font-weight: $font-weight-bold;
+    color: $color-primary;
+    margin-bottom: $spacing-xs;
+  }
+  
+  .subtitle {
+    font-size: $font-size-sm;
+    color: $color-text-tertiary;
+  }
+}
+
+.section {
+  margin-bottom: $spacing-lg;
+  
+  .sectionTitle {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-md;
+    display: flex;
+    align-items: center;
+    
+    .titleIcon {
+      margin-right: $spacing-xs;
+      font-size: 36rpx;
+    }
+  }
+}
+
+.petGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-md;
+}
+
+.emergencyBanner {
+  background: linear-gradient(135deg, $color-error 0%, #ff6b6b 100%);
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  display: flex;
+  align-items: center;
+  margin-top: $spacing-lg;
+  
+  .emergencyIcon {
+    width: 100rpx;
+    height: 100rpx;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: $radius-round;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: $spacing-md;
+    
+    .iconText {
+      font-size: 48rpx;
+    }
+  }
+  
+  .emergencyContent {
+    flex: 1;
+    
+    .emergencyTitle {
+      font-size: $font-size-lg;
+      font-weight: $font-weight-semibold;
+      color: $color-text-white;
+      margin-bottom: 8rpx;
+    }
+    
+    .emergencyDesc {
+      font-size: $font-size-sm;
+      color: rgba(255, 255, 255, 0.9);
+    }
+  }
+  
+  .arrowIcon {
+    color: $color-text-white;
+    font-size: 40rpx;
+  }
+}
+
+.hotQuestions {
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  box-shadow: $shadow-card;
+}
+
+.questionItem {
+  display: flex;
+  align-items: center;
+  padding: $spacing-md 0;
+  border-bottom: 1rpx solid $color-border;
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  .questionIcon {
+    width: 64rpx;
+    height: 64rpx;
+    background: rgba($color-primary, 0.1);
+    border-radius: $radius-round;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: $spacing-md;
+    
+    .iconText {
+      font-size: 28rpx;
+    }
+  }
+  
+  .questionContent {
+    flex: 1;
+    
+    .questionTitle {
+      font-size: $font-size-md;
+      color: $color-text-primary;
+      margin-bottom: 4rpx;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    
+    .questionMeta {
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+    }
+  }
+  
+  .arrowIcon {
+    color: $color-text-tertiary;
+    font-size: 32rpx;
+  }
+}

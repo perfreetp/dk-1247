@@ -1,0 +1,261 @@
+@use '@/styles/variables.scss' as *;
+
+.container {
+  min-height: 100vh;
+  background: $color-bg-page;
+  padding: $spacing-md $page-padding;
+}
+
+.questionSummary {
+  background: $color-bg-card;
+  border-radius: $radius-lg;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  
+  .questionHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: $spacing-md;
+    
+    .petBadge {
+      display: flex;
+      align-items: center;
+      background: rgba($color-primary, 0.1);
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $radius-button;
+      margin-right: $spacing-sm;
+      
+      .petIcon {
+        margin-right: 4rpx;
+        font-size: 28rpx;
+      }
+      
+      .petType {
+        font-size: $font-size-xs;
+        color: $color-primary;
+      }
+    }
+    
+    .questionTime {
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+    }
+  }
+  
+  .questionContent {
+    font-size: $font-size-md;
+    color: $color-text-primary;
+    line-height: $line-height-loose;
+    margin-bottom: $spacing-md;
+  }
+  
+  .petInfo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-sm;
+    
+    .infoTag {
+      font-size: $font-size-xs;
+      color: $color-text-secondary;
+      background: $color-bg-page;
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $radius-xs;
+    }
+  }
+}
+
+.aiLabel {
+  display: flex;
+  align-items: center;
+  font-size: $font-size-md;
+  font-weight: $font-weight-semibold;
+  color: $color-text-primary;
+  margin-bottom: $spacing-md;
+  
+  .aiIcon {
+    margin-right: $spacing-xs;
+    font-size: 36rpx;
+  }
+}
+
+.categorySection {
+  margin-bottom: $spacing-md;
+  
+  .sectionTitle {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-md;
+    display: flex;
+    align-items: center;
+    
+    .titleIcon {
+      margin-right: $spacing-xs;
+      font-size: 36rpx;
+    }
+    
+    .categoryBadge {
+      font-size: $font-size-xs;
+      color: $color-text-white;
+      background: $color-primary;
+      padding: 4rpx 12rpx;
+      border-radius: $radius-xs;
+      margin-left: $spacing-sm;
+    }
+  }
+}
+
+.answerCard {
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  
+  .answerContent {
+    font-size: $font-size-md;
+    color: $color-text-primary;
+    line-height: $line-height-loose;
+    white-space: pre-wrap;
+    margin-bottom: $spacing-md;
+  }
+  
+  .answerFooter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: $spacing-md;
+    border-top: 1rpx solid $color-border;
+    
+    .answerMeta {
+      display: flex;
+      align-items: center;
+      
+      .verifiedBadge {
+        display: flex;
+        align-items: center;
+        font-size: $font-size-xs;
+        color: $color-success;
+        background: rgba($color-success, 0.1);
+        padding: 4rpx 12rpx;
+        border-radius: $radius-xs;
+        margin-right: $spacing-sm;
+        
+        .checkIcon {
+          margin-right: 4rpx;
+        }
+      }
+      
+      .helpfulCount {
+        font-size: $font-size-xs;
+        color: $color-text-tertiary;
+      }
+    }
+  }
+}
+
+.feedbackSection {
+  background: $color-bg-card;
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  box-shadow: $shadow-card;
+  
+  .feedbackTitle {
+    font-size: $font-size-md;
+    font-weight: $font-weight-semibold;
+    color: $color-text-primary;
+    margin-bottom: $spacing-md;
+    text-align: center;
+  }
+  
+  .feedbackButtons {
+    display: flex;
+    gap: $spacing-md;
+  }
+  
+  .feedbackBtn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: $spacing-md;
+    border: 2rpx solid $color-border;
+    border-radius: $radius-md;
+    transition: all $transition-base;
+    
+    &.active {
+      border-color: $color-primary;
+      background: rgba($color-primary, 0.05);
+    }
+    
+    &.outdated {
+      border-color: $color-warning;
+      background: rgba($color-warning, 0.05);
+    }
+    
+    .feedbackIcon {
+      font-size: 48rpx;
+      margin-bottom: $spacing-xs;
+    }
+    
+    .feedbackText {
+      font-size: $font-size-sm;
+      color: $color-text-primary;
+    }
+    
+    .feedbackCount {
+      font-size: $font-size-xs;
+      color: $color-text-tertiary;
+      margin-top: 4rpx;
+    }
+  }
+}
+
+.warningCard {
+  background: linear-gradient(135deg, $color-urgent 0%, #ff6b6b 100%);
+  border-radius: $radius-md;
+  padding: $spacing-lg;
+  margin-bottom: $spacing-md;
+  
+  .warningHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: $spacing-sm;
+    
+    .warningIcon {
+      font-size: 36rpx;
+      margin-right: $spacing-xs;
+    }
+    
+    .warningTitle {
+      font-size: $font-size-md;
+      font-weight: $font-weight-semibold;
+      color: $color-text-white;
+    }
+  }
+  
+  .warningContent {
+    font-size: $font-size-sm;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: $line-height-loose;
+  }
+}
+
+.consultDoctorBtn {
+  width: 100%;
+  height: $button-height-lg;
+  background: $color-primary;
+  border: none;
+  border-radius: $radius-button;
+  color: $color-text-white;
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  margin-top: $spacing-lg;
+  
+  &:active {
+    opacity: 0.9;
+    transform: scale(0.98);
+  }
+}
