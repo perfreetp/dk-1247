@@ -119,6 +119,12 @@
         font-size: $font-size-xs;
         color: $color-primary;
       }
+      
+      .noPetBadge {
+        font-size: 20rpx;
+        color: $color-text-tertiary;
+        margin-left: $spacing-xs;
+      }
     }
     
     .statusBadge {

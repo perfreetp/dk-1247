@@ -7,12 +7,12 @@ import { useAppContext } from '@/store/AppContext';
 
 const QuestionHistoryPage: React.FC = () => {
   const [selectedPetId, setSelectedPetId] = useState<string>('all');
-  const [historyList, setHistoryList] = useState(mockQuestions);
+  const [historyList, setHistoryList] = useState<any[]>([]);
   const { questionHistory, petProfiles } = useAppContext();
 
   useEffect(() => {
     filterHistory();
-  }, [selectedPetId]);
+  }, [selectedPetId, questionHistory]);
 
   const filterHistory = () => {
     const allQuestions = [...mockQuestions, ...questionHistory];
@@ -72,8 +72,15 @@ const QuestionHistoryPage: React.FC = () => {
       icon: getPetEmoji(profile.pet.type),
       type: profile.pet.type
     })),
-    { id: 'no-pet', name: '未关联宠物', icon: '❓', type: 'unknown' }
+    { id: 'no-pet', name: '未关联', icon: '❓', type: 'unknown' }
   ];
+
+  const getRelatedPet = (question: any) => {
+    if (question.petId) {
+      return petProfiles.find(p => p.id === question.petId);
+    }
+    return null;
+  };
 
   return (
     <View className={styles.container}>
@@ -99,7 +106,9 @@ const QuestionHistoryPage: React.FC = () => {
           <Text className={styles.emptyDesc}>
             {selectedPetId === 'all' 
               ? '您还没有提问记录，快去提问吧！'
-              : '这只宠物还没有提问记录'}
+              : selectedPetId === 'no-pet'
+              ? '没有未关联宠物的问题记录'
+              : `这只宠物还没有提问记录`}
           </Text>
         </View>
       ) : (
@@ -110,7 +119,7 @@ const QuestionHistoryPage: React.FC = () => {
               : `${filterOptions.find(o => o.id === selectedPetId)?.name} 的 ${historyList.length} 条记录`}
           </Text>
           {historyList.map(question => {
-            const relatedPet = petProfiles.find(p => p.id === question.petId);
+            const relatedPet = getRelatedPet(question);
             return (
               <View
                 key={question.id}
@@ -125,6 +134,9 @@ const QuestionHistoryPage: React.FC = () => {
                     <Text className={styles.petType}>
                       {relatedPet ? relatedPet.pet.name : getPetName(question.petType)}
                     </Text>
+                    {!relatedPet && !question.petId && question.petId !== undefined && (
+                      <Text className={styles.noPetBadge}>未关联</Text>
+                    )}
                   </View>
                   <View className={styles.statusBadge}>
                     {question.status === 'answered' ? '✓ 已解答' : '⏳ 待解答'}

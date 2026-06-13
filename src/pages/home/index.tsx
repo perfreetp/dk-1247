@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import styles from './index.module.scss';
+import DailyTipCard from '@/components/DailyTipCard';
 import { mockQuestions, mockAnswers } from '@/data/mockQuestions';
+import { mockDailyTips } from '@/data/mockKnowledge';
 
 const HomePage: React.FC = () => {
   const [dailyTip, setDailyTip] = useState(mockDailyTips[0]);

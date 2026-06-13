@@ -3,40 +3,52 @@ import { View, Text, ScrollView } from '@tarojs/components';
 import Taro from '@tarojs/taro';
 import styles from './index.module.scss';
 import { mockQuestions, mockAnswers } from '@/data/mockQuestions';
+import { useAppContext } from '@/store/AppContext';
 import { Question } from '@/types/question';
 
 const AnswerPage: React.FC = () => {
   const [question, setQuestion] = useState<Question | null>(null);
   const [isHelpful, setIsHelpful] = useState(false);
   const [isOutdated, setIsOutdated] = useState(false);
+  const { questionHistory } = useAppContext();
 
   useEffect(() => {
-    const { id, petType, symptoms, breed, age, diet } = 
+    const { id, petType, symptoms, breed, age, diet, petId } = 
       Taro.getCurrentInstance().router?.params || {};
 
     if (id) {
-      const foundQuestion = mockQuestions.find(q => q.id === id);
-      if (foundQuestion) {
-        setQuestion(foundQuestion);
+      const foundInMock = mockQuestions.find(q => q.id === id);
+      if (foundInMock) {
+        setQuestion(foundInMock);
+        return;
       }
-    } else {
-      const newQuestion: Question = {
-        id: Date.now().toString(),
-        title: '宠物健康问题咨询',
-        content: decodeURIComponent(symptoms || '宠物健康问题咨询'),
-        petType: (petType || 'cat') as 'cat' | 'dog' | 'rabbit' | 'bird',
-        category: 'health',
-        petInfo: {
-          breed: decodeURIComponent(breed || ''),
-          age: parseFloat(decodeURIComponent(age || '0')) || 0,
-          diet: decodeURIComponent(diet || '')
-        },
-        createdAt: new Date().toISOString().split('T')[0],
-        status: 'answered'
-      };
-      setQuestion(newQuestion);
+
+      const foundInHistory = questionHistory.find(q => q.id === id);
+      if (foundInHistory) {
+        setQuestion(foundInHistory);
+        return;
+      }
+
+      if (symptoms) {
+        const newQuestion: Question = {
+          id: id,
+          title: decodeURIComponent(symptoms || '').substring(0, 30) + '...',
+          content: decodeURIComponent(symptoms || ''),
+          petType: (petType || 'cat') as 'cat' | 'dog' | 'rabbit' | 'bird',
+          category: 'health',
+          petInfo: {
+            breed: decodeURIComponent(breed || ''),
+            age: parseFloat(decodeURIComponent(age || '0')) || 0,
+            diet: decodeURIComponent(diet || '')
+          },
+          petId: petId || undefined,
+          createdAt: new Date().toISOString().split('T')[0],
+          status: 'answered'
+        };
+        setQuestion(newQuestion);
+      }
     }
-  }, []);
+  }, [questionHistory]);
 
   const getPetEmoji = (type: string) => {
     const emojis: Record<string, string> = {
